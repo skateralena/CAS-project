@@ -2,12 +2,9 @@ import tkinter as tk
 from tkinter.filedialog import *
 from BioBoot_new import *
 
-len_of_min_speycer = 3
-len_of_max_speycer = 3
+len_of_min_spey = 3
+len_of_max_spey = 3
 count_of_missing = 1
-
-#perform_execution = False
-"""Флаг цикличности выполнения расчёта"""
 
 def download_data_from_file():
     """Открывает диалоговое окно выбора имени файла,
@@ -21,20 +18,32 @@ def download_data_from_file():
     fasta = [string_fasta.strip() for string_fasta in fasta]
 
 def start_execute():
+    """
+    Функция запускается после нажатия на кнопку start_button
+    запускает обработку данных, и вызывает диологовое окно
+    для сохранения результата, в выбранный файл, например result.txt
+    """
     global fasta
-    l_spic_min = int(len_of_min_speycer.get())
-    l_spic_max = int(len_of_max_speycer.get())
+    l_spic_min = int(len_of_min_spey.get())
+    l_spic_max = int(len_of_max_spey.get())
     missing_can = count_of_missing.get()
     max_spey, speys = execute(fasta, l_spic_min, l_spic_max, missing_can)
     save_data_to_file(max_spey, speys)
 
 def save_data_to_file(max_spey, speys):
-    print(*max_spey)
-    print(*speys)
+    """
+    Функция сохраняет данные максимального спейсера, его длины,
+    а также другие спейсеры, которые смогла выявить программа той же или меньшей длины
+    """
+    output_filename = asksaveasfilename(filetypes=(("Text file", ".txt"),))
+    with open(output_filename, 'w') as out_file:
+        out_file.write("%s\n" % (max_spey))
+        out_file.write("%s\n" % (speys))
+
 
 def main():
-    global len_of_min_speycer
-    global len_of_max_speycer
+    global len_of_min_spey
+    global len_of_max_spey
     global count_of_missing
 
     window = tk.Tk()
@@ -86,25 +95,26 @@ def main():
     text14 = tk.Label(frame1, text='3)Количество “ошибок” в спейсере (1 либо 0)', bg='light goldenrod')
     text14.grid(sticky="w")
 
-    start_button = tk.Button(master=frame2, text='Запустить программу!', bg='gold', command=start_execute, width=20, height=3)
+    #кнопки, отвечающие за загрузку данных и запуск программы
+    start_button = tk.Button(master=frame2, text='Запустить\nпрограмму!', bg='gold', command=start_execute, width=20, height=3)
     start_button.pack(side=tk.RIGHT)
 
     download_button = tk.Button(master=frame2, text='Загрузить файл', bg='gold', command=download_data_from_file, width=20, height=3)
-    download_button.pack(side=tk.LEFT)
+    download_button.pack(side=tk.RIGHT)
 
     #Min число нукеолтидов в спейсере
-    len_of_min_speycer = tk.DoubleVar()
-    len_of_min_speycer.set(3)
-    entr1 = tk.Entry(frame3, textvariable=len_of_min_speycer)
+    len_of_min_spey = tk.DoubleVar()
+    len_of_min_spey.set(3)
+    entr1 = tk.Entry(frame3, textvariable=len_of_min_spey)
     entr1.pack(side=tk.RIGHT)
 
     labe1 = tk.Label(frame3, text='Min нукеолтидов в спейсере', bg='light goldenrod')
     labe1.pack(side=tk.LEFT)
 
     #Max число нукеолтидов в спейсере
-    len_of_max_speycer = tk.DoubleVar()
-    len_of_max_speycer.set(3)
-    entr2 = tk.Entry(frame4, textvariable=len_of_max_speycer)
+    len_of_max_spey = tk.DoubleVar()
+    len_of_max_spey.set(3)
+    entr2 = tk.Entry(frame4, textvariable=len_of_max_spey)
     entr2.pack(side=tk.RIGHT)
 
     labe2 = tk.Label(frame4, text='Max нукеолтидов в спейсере', bg='light goldenrod')
